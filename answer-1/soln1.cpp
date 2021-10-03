@@ -6,6 +6,22 @@ using namespace std;
 #define ll long long int
 
 
+void getTitles(const string &line, vector<string>& columnTitles) {
+	if (line.size() == 0) {
+		cout << "something went wrong while parsing titles line..." << endl;
+		return;
+	}
+	istringstream iss(line);
+
+	while (iss.good()) {
+		string substr;
+		getline(iss, substr, ',');
+		columnTitles.push_back(substr);
+	}
+
+	// cout << "titles size in getTitles: " << columnTitles.size() << endl;
+}
+
 void getSingleLineData(const string& line, vector<ll> &singleLineData) {
 	if (line.size() == 0) {
 		cout << "something went wrong while parsing titles line..." << endl;
@@ -21,12 +37,13 @@ void getSingleLineData(const string& line, vector<ll> &singleLineData) {
 
 }
 
-void getData(ifstream& inputFile, vector<vector<ll>>& inputData, string& columnTitles) {
+void getData(ifstream& inputFile, vector<vector<ll>>& inputData, vector<string>& columnTitles) {
 	// read column titles
 	if (inputFile.good()) {
-		getline(inputFile, columnTitles, '\n');
+		string titlesLine;
+		getline(inputFile, titlesLine, '\n');
+		getTitles(titlesLine, columnTitles);
 	}
-
 
 	// read rest of the data
 	while (inputFile.good()) {
@@ -49,7 +66,7 @@ int main() {
 	// getting the data
 	vector<vector<ll>> inputData;
 	vector<vector<ll>> outputData;
-	string columnTitles;
+	vector<string> columnTitles;
 	getData(inputFile, inputData, columnTitles);
 	inputFile.close();
 
@@ -89,14 +106,27 @@ int main() {
 		flag++;
 	}
 
-	outputFile << columnTitles << '\n';
+	size_t titleSize = columnTitles.size();
+
+	// write data titles to output file
+	for (size_t col = 0; col < titleSize; col++) {
+		// ignore the column from ignore_col_list
+		if (ignore_col_list.find(col) != ignore_col_list.end()) continue;
+		outputFile << columnTitles[col];
+		if (col != titleSize - 1) {
+			outputFile << ',';
+		}
+	} outputFile << '\n';
 
 	// write the rest data to the file
 	for (size_t row = 0; row < outputData.size(); row++) {
 		for (size_t col = 0; col < outputData[row].size(); col++) {
 			// ignore the column from ignore_col_list
 			if (ignore_col_list.find(col) != ignore_col_list.end()) continue;
-			outputFile << outputData[row][col] << ",";
+			outputFile << outputData[row][col];
+			if (col != titleSize - 1) {
+				outputFile << ',';
+			}
 		} outputFile << '\n';
 	}
 
