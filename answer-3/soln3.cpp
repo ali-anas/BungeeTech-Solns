@@ -49,13 +49,17 @@ int main() {
 	sort(allData.begin(), allData.end(), compare);
 
 
+	size_t totalCols = isUsefulCol.size() + 1;
 	// start writing the output file
 	outputFile << "" << "," << "Team" << "," << "Yellow Cards" << "," << "Red Cards" << '\n';
 	for (size_t i = 0; i < allData.size(); i++) {
-		for (auto col : allData[i]) {
-			outputFile << col << ",";
-		}
-		outputFile << '\n';
+		for (size_t j = 0; j < allData[i].size(); j++) {
+			if (j == totalCols - 1) {
+				outputFile << allData[i][j];
+			} else {
+				outputFile << allData[i][j] << ",";
+			}
+		} outputFile << '\n';
 	}
 
 	return 0;
