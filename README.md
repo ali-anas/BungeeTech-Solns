@@ -1,5 +1,5 @@
 ## Requirements
-    You need gdb to be installed to compile and the .cpp files.
+    You need **gdb** to be installed to compile the .cpp files.
     
 ## How to compile
     i. Just navigate to the .cpp file directory in terminal.
